@@ -1,4 +1,4 @@
-use codegen::nodes::Module;
+use codegen_rs::nodes::Module;
 
 fn main() {
     let mut module = Module::new();
