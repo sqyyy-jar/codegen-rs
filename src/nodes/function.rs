@@ -61,6 +61,9 @@ impl GenerateCode for Function {
         if self.public {
             _ = write!(fmt, "pub ");
         }
+        if self.constant {
+            _ = write!(fmt, "const ");
+        }
         _ = write!(fmt, "fn {}(", self.name);
         for (i, param) in self.params.iter().enumerate() {
             if i > 0 {
