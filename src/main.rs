@@ -10,5 +10,5 @@ fn main() {
         .set_public(true)
         .add_field("reg", "i16")
         .set_public(true);
-    println!("~~~\n{}\n~~~", module.to_string());
+    println!("~~~\n{module}\n~~~");
 }

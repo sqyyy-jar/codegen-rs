@@ -20,7 +20,10 @@ pub mod r#static;
 pub mod r#struct;
 pub mod r#trait;
 
-use std::{borrow::Cow, fmt::Write};
+use std::{
+    borrow::Cow,
+    fmt::{Display, Write},
+};
 
 use crate::generator::GenerateCode;
 
@@ -83,6 +86,12 @@ impl Module {
     }
 }
 
+impl Default for Module {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GenerateCode for Module {
     fn generate(&self, formatter: &mut crate::generator::Formatter) {
         let len = self.nodes.len();
@@ -102,12 +111,13 @@ impl GenerateCode for Module {
     }
 }
 
-impl ToString for Module {
-    fn to_string(&self) -> String {
-        self.to_code_string()
+impl Display for Module {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.to_code_string())
     }
 }
 
+#[non_exhaustive]
 pub enum ModuleNode {
     Submodule(Submodule),
     Const(Const),

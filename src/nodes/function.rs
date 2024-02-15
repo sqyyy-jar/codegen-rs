@@ -133,6 +133,12 @@ impl Block {
     }
 }
 
+impl Default for Block {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl GenerateCode for Block {
     fn generate(&self, fmt: &mut crate::generator::Formatter) {
         fmt.write_block(|fmt| {
@@ -143,6 +149,7 @@ impl GenerateCode for Block {
     }
 }
 
+#[non_exhaustive]
 pub enum Statement {
     Return(Option<Expr>),
 }
