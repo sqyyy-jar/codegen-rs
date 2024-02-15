@@ -6,6 +6,7 @@ use super::{expr::Expr, CowStr};
 
 pub struct Function {
     public: bool,
+    constant: bool,
     name: CowStr,
     params: Vec<Param>,
     return_type: Option<CowStr>,
@@ -16,6 +17,7 @@ impl Function {
     pub fn new(name: CowStr) -> Self {
         Self {
             public: false,
+            constant: false,
             name,
             params: Vec::new(),
             return_type: None,
@@ -25,6 +27,11 @@ impl Function {
 
     pub fn set_public(&mut self, public: bool) -> &mut Self {
         self.public = public;
+        self
+    }
+
+    pub fn set_const(&mut self, constant: bool) -> &mut Self {
+        self.constant = constant;
         self
     }
 
