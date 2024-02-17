@@ -2,8 +2,8 @@
 
 This is a work-in-progress code generation library for Rust.
 
-The exact way to create code is not set in stone yet and there are still a
-[few things](https://github.com/users/sqyyy-jar/projects/6) missing.
+The exact way to create code is not set in stone yet and there are still
+[several things](https://github.com/users/sqyyy-jar/projects/6) missing.
 
 Feel free to open an issue if you have any ideas for the library.
 
@@ -37,7 +37,7 @@ vec2_new
 let code = module.to_string();
 ```
 
-This will generate this code:
+The above will generate this code:
 
 ```rs
 pub struct Vec2 {
