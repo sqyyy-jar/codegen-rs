@@ -1,4 +1,4 @@
-use std::fmt::Write;
+use std::fmt::{Display, Write};
 
 use crate::generator::GenerateCode;
 
@@ -18,6 +18,8 @@ pub enum Expr {
     Tuple(Box<Tuple>),
     StructInitializer(Box<StructInitializer>),
     TupleInitializer(Box<TupleInitializer>),
+    UnaryOp(Box<UnaryOp>),
+    BinaryOp(Box<UnaryOp>),
 }
 
 impl GenerateCode for Expr {
@@ -35,6 +37,8 @@ impl GenerateCode for Expr {
             Expr::Tuple(value) => value.generate(fmt),
             Expr::StructInitializer(value) => value.generate(fmt),
             Expr::TupleInitializer(value) => value.generate(fmt),
+            Expr::UnaryOp(value) => value.generate(fmt),
+            Expr::BinaryOp(value) => value.generate(fmt),
         }
     }
 }
@@ -266,5 +270,93 @@ impl GenerateCode for TupleInitializer {
             }
             _ = write!(fmt, ")");
         }
+    }
+}
+
+#[non_exhaustive]
+#[derive(Clone, Copy)]
+pub enum Operator {
+    Plus,
+    Minus,
+    Star,
+    Slash,
+    Percent,
+    Not,
+    LogicOr,
+    LogicAnd,
+    BitOr,
+    BitAnd,
+    BitLeft,
+    BitRight,
+    Xor,
+}
+
+impl Operator {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Operator::Plus => "+",
+            Operator::Minus => "-",
+            Operator::Star => "*",
+            Operator::Slash => "/",
+            Operator::Percent => "%",
+            Operator::Not => "!",
+            Operator::LogicOr => "||",
+            Operator::LogicAnd => "&&",
+            Operator::BitOr => "|",
+            Operator::BitAnd => "&",
+            Operator::BitLeft => "<<",
+            Operator::BitRight => ">>",
+            Operator::Xor => "^",
+        }
+    }
+}
+
+impl Display for Operator {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.as_str())
+    }
+}
+
+pub struct UnaryOp {
+    operator: Operator,
+    value: Expr,
+}
+
+impl UnaryOp {
+    pub fn new(operator: Operator, value: Expr) -> Self {
+        Self { operator, value }
+    }
+}
+
+impl GenerateCode for UnaryOp {
+    fn generate(&self, fmt: &mut crate::generator::Formatter) {
+        _ = write!(fmt, "{}", self.operator);
+        self.value.generate(fmt);
+    }
+}
+
+pub struct BinaryOp {
+    operator: Operator,
+    left: Expr,
+    right: Expr,
+}
+
+impl BinaryOp {
+    pub fn new(operator: Operator, left: Expr, right: Expr) -> Self {
+        Self {
+            operator,
+            left,
+            right,
+        }
+    }
+}
+
+impl GenerateCode for BinaryOp {
+    fn generate(&self, fmt: &mut crate::generator::Formatter) {
+        _ = write!(fmt, "(");
+        self.left.generate(fmt);
+        _ = write!(fmt, " {} ", self.operator);
+        self.right.generate(fmt);
+        _ = write!(fmt, ")");
     }
 }
