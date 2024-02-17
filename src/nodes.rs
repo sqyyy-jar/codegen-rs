@@ -16,6 +16,7 @@ pub mod r#enum;
 pub mod expr;
 pub mod function;
 pub mod r#impl;
+pub mod statement;
 pub mod r#static;
 pub mod r#struct;
 pub mod r#trait;

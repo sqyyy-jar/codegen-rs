@@ -2,7 +2,7 @@ use std::fmt::Write;
 
 use crate::generator::GenerateCode;
 
-use super::{expr::Expr, CowStr};
+use super::{statement::Block, CowStr};
 
 pub struct Function {
     public: bool,
@@ -118,44 +118,5 @@ impl GenerateCode for Param {
         if let Some(type_) = &self.r#type {
             _ = write!(fmt, ": {type_}");
         }
-    }
-}
-
-pub struct Block {
-    statements: Vec<Statement>,
-}
-
-impl Block {
-    pub fn new() -> Self {
-        Self {
-            statements: Vec::new(),
-        }
-    }
-}
-
-impl Default for Block {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-impl GenerateCode for Block {
-    fn generate(&self, fmt: &mut crate::generator::Formatter) {
-        fmt.write_block(|fmt| {
-            for statement in &self.statements {
-                statement.generate(fmt);
-            }
-        });
-    }
-}
-
-#[non_exhaustive]
-pub enum Statement {
-    Return(Option<Expr>),
-}
-
-impl GenerateCode for Statement {
-    fn generate(&self, _fmt: &mut crate::generator::Formatter) {
-        todo!("Implement statements")
     }
 }
