@@ -1,17 +1,17 @@
 use std::fmt::Write;
 
-use crate::generator::GenerateCode;
+use crate::{generator::GenerateCode, Str};
 
-use super::{function::Function, CowStr};
+use super::function::Function;
 
 pub struct Trait {
     public: bool,
-    name: CowStr,
+    name: Str,
     functions: Vec<Function>,
 }
 
 impl Trait {
-    pub fn new(name: CowStr) -> Self {
+    pub fn new(name: Str) -> Self {
         Self {
             public: false,
             name,
@@ -24,7 +24,7 @@ impl Trait {
         self
     }
 
-    pub fn add_function(&mut self, name: impl Into<CowStr>) -> &mut Function {
+    pub fn add_function(&mut self, name: impl Into<Str>) -> &mut Function {
         push_mut!(self.functions, Function::new(name.into()))
     }
 }

@@ -1,8 +1,6 @@
 use std::fmt::Write;
 
-use crate::generator::GenerateCode;
-
-use super::{expr::Expr, CowStr};
+use crate::{expr::Expr, generator::GenerateCode, Str};
 
 pub struct Block {
     statements: Vec<Statement>,
@@ -54,12 +52,12 @@ impl GenerateCode for Statement {
 
 pub struct LetStatement {
     mutable: bool,
-    name: CowStr,
+    name: Str,
     value: Expr,
 }
 
 impl LetStatement {
-    pub fn new(name: CowStr, value: Expr) -> Self {
+    pub fn new(name: Str, value: Expr) -> Self {
         Self {
             mutable: false,
             name,

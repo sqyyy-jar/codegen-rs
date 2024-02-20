@@ -1,17 +1,17 @@
 use std::fmt::Write;
 
-use crate::generator::GenerateCode;
+use crate::{generator::GenerateCode, Str};
 
-use super::{function::Function, CowStr};
+use super::function::Function;
 
 pub struct Impl {
-    target: CowStr,
-    r#trait: Option<CowStr>,
+    target: Str,
+    r#trait: Option<Str>,
     functions: Vec<Function>,
 }
 
 impl Impl {
-    pub fn new(target: CowStr) -> Self {
+    pub fn new(target: Str) -> Self {
         Self {
             target,
             r#trait: None,
@@ -20,12 +20,12 @@ impl Impl {
     }
 
     /// Set the trait to implement
-    pub fn set_trait(&mut self, r#trait: impl Into<CowStr>) -> &mut Self {
+    pub fn set_trait(&mut self, r#trait: impl Into<Str>) -> &mut Self {
         self.r#trait = Some(r#trait.into());
         self
     }
 
-    pub fn add_function(&mut self, name: impl Into<CowStr>) -> &mut Function {
+    pub fn add_function(&mut self, name: impl Into<Str>) -> &mut Function {
         push_mut!(self.functions, Function::new(name.into()))
     }
 }

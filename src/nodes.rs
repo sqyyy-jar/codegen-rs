@@ -13,7 +13,6 @@ macro_rules! push_mut {
 
 pub mod r#const;
 pub mod r#enum;
-pub mod expr;
 pub mod function;
 pub mod r#impl;
 pub mod statement;
@@ -21,19 +20,14 @@ pub mod r#static;
 pub mod r#struct;
 pub mod r#trait;
 
-use std::{
-    borrow::Cow,
-    fmt::{Display, Write},
-};
+use std::fmt::{Display, Write};
 
-use crate::generator::GenerateCode;
+use crate::{expr::Expr, generator::GenerateCode, Str};
 
 use self::{
-    expr::Expr, function::Function, r#const::Const, r#enum::Enum, r#impl::Impl, r#static::Static,
+    function::Function, r#const::Const, r#enum::Enum, r#impl::Impl, r#static::Static,
     r#struct::Struct, r#trait::Trait,
 };
-
-pub type CowStr = Cow<'static, str>;
 
 pub struct Module {
     nodes: Vec<ModuleNode>,
@@ -44,14 +38,14 @@ impl Module {
         Self { nodes: Vec::new() }
     }
 
-    pub fn add_submodule(&mut self, name: impl Into<CowStr>) -> &mut Submodule {
+    pub fn add_submodule(&mut self, name: impl Into<Str>) -> &mut Submodule {
         push_mut!(@[ModuleNode::Submodule] self.nodes, Submodule::new(name.into()))
     }
 
     pub fn add_const(
         &mut self,
-        name: impl Into<CowStr>,
-        r#type: impl Into<CowStr>,
+        name: impl Into<Str>,
+        r#type: impl Into<Str>,
         value: impl Into<Expr>,
     ) -> &mut Const {
         push_mut!(@[ModuleNode::Const] self.nodes, Const::new(name.into(), r#type.into(), value.into()))
@@ -59,30 +53,30 @@ impl Module {
 
     pub fn add_static(
         &mut self,
-        name: impl Into<CowStr>,
-        r#type: impl Into<CowStr>,
+        name: impl Into<Str>,
+        r#type: impl Into<Str>,
         value: impl Into<Expr>,
     ) -> &mut Static {
         push_mut!(@[ModuleNode::Static] self.nodes, Static::new(name.into(), r#type.into(), value.into()))
     }
 
-    pub fn add_struct(&mut self, name: impl Into<CowStr>) -> &mut Struct {
+    pub fn add_struct(&mut self, name: impl Into<Str>) -> &mut Struct {
         push_mut!(@[ModuleNode::Struct] self.nodes, Struct::new(name.into()))
     }
 
-    pub fn add_enum(&mut self, name: impl Into<CowStr>) -> &mut Enum {
+    pub fn add_enum(&mut self, name: impl Into<Str>) -> &mut Enum {
         push_mut!(@[ModuleNode::Enum] self.nodes, Enum::new(name.into()))
     }
 
-    pub fn add_trait(&mut self, name: impl Into<CowStr>) -> &mut Trait {
+    pub fn add_trait(&mut self, name: impl Into<Str>) -> &mut Trait {
         push_mut!(@[ModuleNode::Trait] self.nodes, Trait::new(name.into()))
     }
 
-    pub fn add_impl(&mut self, target: impl Into<CowStr>) -> &mut Impl {
+    pub fn add_impl(&mut self, target: impl Into<Str>) -> &mut Impl {
         push_mut!(@[ModuleNode::Impl] self.nodes, Impl::new(target.into()))
     }
 
-    pub fn add_function(&mut self, name: impl Into<CowStr>) -> &mut Function {
+    pub fn add_function(&mut self, name: impl Into<Str>) -> &mut Function {
         push_mut!(@[ModuleNode::Function] self.nodes, Function::new(name.into()))
     }
 }
@@ -147,12 +141,12 @@ impl GenerateCode for ModuleNode {
 
 pub struct Submodule {
     public: bool,
-    name: CowStr,
+    name: Str,
     module: Module,
 }
 
 impl Submodule {
-    pub fn new(name: CowStr) -> Self {
+    pub fn new(name: Str) -> Self {
         Self {
             public: false,
             name,
@@ -165,14 +159,14 @@ impl Submodule {
         self
     }
 
-    pub fn add_submodule(&mut self, name: impl Into<CowStr>) -> &mut Submodule {
+    pub fn add_submodule(&mut self, name: impl Into<Str>) -> &mut Submodule {
         self.module.add_submodule(name)
     }
 
     pub fn add_const(
         &mut self,
-        name: impl Into<CowStr>,
-        r#type: impl Into<CowStr>,
+        name: impl Into<Str>,
+        r#type: impl Into<Str>,
         value: impl Into<Expr>,
     ) -> &mut Const {
         self.module.add_const(name, r#type, value)
@@ -180,30 +174,30 @@ impl Submodule {
 
     pub fn add_static(
         &mut self,
-        name: impl Into<CowStr>,
-        r#type: impl Into<CowStr>,
+        name: impl Into<Str>,
+        r#type: impl Into<Str>,
         value: impl Into<Expr>,
     ) -> &mut Static {
         self.module.add_static(name, r#type, value)
     }
 
-    pub fn add_struct(&mut self, name: impl Into<CowStr>) -> &mut Struct {
+    pub fn add_struct(&mut self, name: impl Into<Str>) -> &mut Struct {
         self.module.add_struct(name)
     }
 
-    pub fn add_enum(&mut self, name: impl Into<CowStr>) -> &mut Enum {
+    pub fn add_enum(&mut self, name: impl Into<Str>) -> &mut Enum {
         self.module.add_enum(name)
     }
 
-    pub fn add_trait(&mut self, name: impl Into<CowStr>) -> &mut Trait {
+    pub fn add_trait(&mut self, name: impl Into<Str>) -> &mut Trait {
         self.module.add_trait(name)
     }
 
-    pub fn add_impl(&mut self, target: impl Into<CowStr>) -> &mut Impl {
+    pub fn add_impl(&mut self, target: impl Into<Str>) -> &mut Impl {
         self.module.add_impl(target)
     }
 
-    pub fn add_function(&mut self, name: impl Into<CowStr>) -> &mut Function {
+    pub fn add_function(&mut self, name: impl Into<Str>) -> &mut Function {
         self.module.add_function(name)
     }
 }

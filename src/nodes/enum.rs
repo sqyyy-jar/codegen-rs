@@ -1,17 +1,15 @@
 use std::fmt::Write;
 
-use crate::generator::GenerateCode;
-
-use super::CowStr;
+use crate::{generator::GenerateCode, Str};
 
 pub struct Enum {
     public: bool,
-    name: CowStr,
+    name: Str,
     variants: Vec<EnumVariant>,
 }
 
 impl Enum {
-    pub fn new(name: CowStr) -> Self {
+    pub fn new(name: Str) -> Self {
         Self {
             public: false,
             name,

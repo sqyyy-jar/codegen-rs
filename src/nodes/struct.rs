@@ -1,17 +1,15 @@
 use std::fmt::Write;
 
-use crate::generator::GenerateCode;
-
-use super::CowStr;
+use crate::{generator::GenerateCode, Str};
 
 pub struct Struct {
     public: bool,
-    name: CowStr,
+    name: Str,
     fields: Vec<Field>,
 }
 
 impl Struct {
-    pub fn new(name: CowStr) -> Self {
+    pub fn new(name: Str) -> Self {
         Self {
             public: false,
             name,
@@ -24,7 +22,7 @@ impl Struct {
         self
     }
 
-    pub fn add_field(&mut self, name: impl Into<CowStr>, r#type: impl Into<CowStr>) -> &mut Field {
+    pub fn add_field(&mut self, name: impl Into<Str>, r#type: impl Into<Str>) -> &mut Field {
         push_mut!(self.fields, Field::new(name.into(), r#type.into()))
     }
 }
@@ -45,12 +43,12 @@ impl GenerateCode for Struct {
 
 pub struct Field {
     public: bool,
-    name: CowStr,
-    r#type: CowStr,
+    name: Str,
+    r#type: Str,
 }
 
 impl Field {
-    pub fn new(name: CowStr, r#type: CowStr) -> Self {
+    pub fn new(name: Str, r#type: Str) -> Self {
         Self {
             public: false,
             name,
